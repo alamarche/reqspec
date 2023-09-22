@@ -1,0 +1,15 @@
+{
+    "projectName": "ReqSpec",
+    "languages": [{
+        "id": "req-spec",
+        "grammar": "src/language/req-spec.langium",
+        "fileExtensions": [".reqspec"],
+        "textMate": {
+            "out": "syntaxes/req-spec.tmLanguage.json"
+        },
+        "monarch": {
+            "out": "syntaxes/req-spec.monarch.ts"
+        }
+    }],
+    "out": "src/language/generated"
+}
