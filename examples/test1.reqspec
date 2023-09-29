@@ -1,0 +1,16 @@
+reqspec v 1.0 basic
+
+cat Mechanical : "Mechanical category" {
+    cat Plumbing : "Plumbing"
+}
+
+goal Goal1 : "A goal"
+
+req Req0 : "My zeroth requirement's title"
+
+req Req1 : "My first requirement's title" {
+    
+    categories Mechanical
+    desc "This is a description"
+    
+}

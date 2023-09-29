@@ -1,5 +1,5 @@
 import { ValidationAcceptor, ValidationChecks } from 'langium';
-import { ReqSpecAstType, Person } from './generated/ast';
+import { ReqSpecAstType, Requirement } from './generated/ast';
 import type { ReqSpecServices } from './req-spec-module';
 
 /**
@@ -9,7 +9,7 @@ export function registerValidationChecks(services: ReqSpecServices) {
     const registry = services.validation.ValidationRegistry;
     const validator = services.validation.ReqSpecValidator;
     const checks: ValidationChecks<ReqSpecAstType> = {
-        Person: validator.checkPersonStartsWithCapital
+        Requirement: validator.checkRequirementStartsWithCapital
     };
     registry.register(checks, validator);
 }
@@ -19,11 +19,11 @@ export function registerValidationChecks(services: ReqSpecServices) {
  */
 export class ReqSpecValidator {
 
-    checkPersonStartsWithCapital(person: Person, accept: ValidationAcceptor): void {
-        if (person.name) {
-            const firstChar = person.name.substring(0, 1);
+    checkRequirementStartsWithCapital(req: Requirement, accept: ValidationAcceptor): void {
+        if (req.name) {
+            const firstChar = req.name.substring(0, 1);
             if (firstChar.toUpperCase() !== firstChar) {
-                accept('warning', 'Person name should start with a capital.', { node: person, property: 'name' });
+                accept('warning', 'Requirement name should start with a capital.', { node: req, property: 'name' });
             }
         }
     }
