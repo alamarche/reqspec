@@ -43,7 +43,7 @@ fragment NameTitle:
     name=QualifiedName ':' title=STRING;
 
 fragment UniqueID:
-    ('id' uuid=UUID)?;
+    'id' uuid=UUID;
 
 fragment Description:
     ('desc'|'description') desc=STRING;
@@ -68,9 +68,9 @@ QualifiedName returns string:
 //     FOURHEX FOURHEX FOURHEX;
 
 hidden terminal WS: /\s+/;
+terminal UUID returns string: /[a-fA-F0-9]{8}/; //-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal INT returns number: /[0-9]+/;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
-terminal UUID returns string: /[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/;
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
