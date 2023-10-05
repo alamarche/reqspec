@@ -1,27 +1,63 @@
 grammar ReqSpec
 
+/*
+ * == Model Summary (pulled from CMU/SEI 2016) =====================
+ * ReqSpec distinguishes between stakeholder requirements, referred to as goals, 
+ * and system requirements, referred to as requirements. Goals express stakeholder
+ * intent and may conflict with each other, while system requirements represent a 
+ * contract that a system implementation is expected to meet. 
+ * 
+ * The ReqSpec notation accommodates several capabilities. First, it supports an architecture-led 
+ * requirement specification (ALRS) process. In this process, stakeholder goals are turned into 
+ * verifiable system requirement specifications by annotating an AADL model of the system of interest
+ * in its operational environment and, as appropriate, elements of the system architecture. The report 
+ * Requirements and Architecture Specification of the Joint Multi-Role (JMR) Joint Common Architecture (JCA)
+ * Demonstration System introduced this process [Feiler 2015].
+ */
+
+
+
 entry Model:
     items+=(
-                Requirement | Goal |
+                Requirement | RequirementSet | RequirementDocument |
+                Goal | GoalSet | GoalDocument |
                 Category | 
-                Personnel
+                Personnel |
+                Component | Hazard | CompFunction
             )*;
 
 // 
 // == Goal section =================================================
 // 
 
+
+GoalDocument:
+    'goal' ('doc'|'document') NameTitle GoalDocumentBlock?;
+
+fragment GoalDocumentBlock:    
+    '{'
+        (
+            Description |
+            Issues | 
+            (declaredRequirements+=Requirement) |
+            ('ref'|'references') 'goals' referencedGoals+=[Goal:ID] (',' referencedGoals+=[Goal:ID])* |
+            ('ref'|'references') 'goal' 'sets' referencedGoalSets+=[GoalSet:ID] (',' referencedGoalSets+=[GoalSet:ID])*
+        )*
+    '}'; 
+
 GoalSet:
     'goal' 'set' NameTitle GoalSetBlock?;
 
 fragment GoalSetBlock:
     '{'
-        // AllocatingArchitecturalElement
-        // UseConstantSet
-        Description?
-        'goals' declaredGoals+=Goal*
-        'reuses' ('goals') referencedGoals+=[Goal:ID]*
-        Issues?
+        (
+            // AllocatingArchitecturalElement
+            // UseConstantSet
+            Description |
+            (declaredGoals+=Goal) |
+            ( ('refs'|'references') ('goals') referencedGoals+=[Goal:ID] (',' referencedGoals+=[Goal:ID])* ) |
+            Issues
+        )*
     '}';
 
 Goal:
@@ -52,12 +88,6 @@ fragment GoalReference:
 Requirement:
     ('req' | 'requirement') NameTitle RequirementBlock?;
 
-// Common between reqs and goals
-fragment ReqGoalStmt:
-    Id | CategoryRef | Description | Rationale |
-    Dropped | StakeholderReference | OwnerReference | GoalReference |
-    Issues;
-
 fragment RequirementBlock:
     '{'
         (
@@ -81,21 +111,39 @@ RequirementSet:
 
 fragment RequirementSetBlock:
     '{'
-        Description?
-        // see document     (see if we can embed markdown for hyperlinks?)
-        GoalReference?
-        // VariableReference
-        'reqs'|'requirements' declaredRequirements+=Requirement*
-        'reuses' ('reqs'|'requirements') referencedRequirements+=[Requirement:ID]*
-        Issues?
+        (
+            Description |
+            // see document     (see if we can embed markdown for hyperlinks?)
+            GoalReference |
+            // VariableReference
+            (declaredRequirements+=Requirement) |
+            ('ref'|'references') ('req'|'requirement') referencedRequirements+=[Requirement:ID] (',' referencedRequirements+=[Requirement:ID])* |
+            Issues
+        )*
     '}';
 
 RequirementDocument:
-    ('req' | 'requirement') ('doc'|'document') NameTitle; 
+    ('req'|'requirement') ('doc'|'document') NameTitle RequirementDocumentBlock?;
+
+fragment RequirementDocumentBlock:    
+    '{'
+        (
+            Description |
+            Issues | 
+            (declaredRequirements+=Requirement) |
+            ('ref'|'references') ('req'|'requirement') referencedRequirements+=[Requirement:ID] (',' referencedRequirements+=[Requirement:ID])*
+        )*
+    '}'; 
 
 // 
 // == Items common between goals, requirements, etc. ==============================
 // 
+
+// Common between reqs and goals
+fragment ReqGoalStmt:
+    Id | CategoryRef | Description | Rationale |
+    Dropped | StakeholderReference | OwnerReference | GoalReference |
+    Issues;
 
 fragment Dropped:
     'dropped' reason=STRING;
@@ -113,13 +161,15 @@ Personnel:
 
 fragment PersonnelBlock:
     '{'
-        ('name' personName=STRING)?
-        ('title' title=STRING)?
-        Description?
-        ('role' role=STRING)?
-        ('email' email=STRING)?
-        ('phone' phone=STRING)?
-        // supervisor - seems unnecessary
+        (
+            ('name' personName=STRING) |
+            ('title' title=STRING) |
+            Description |
+            ('role' role=STRING) |
+            ('email' email=STRING) |
+            ('phone' phone=STRING)
+            // supervisor - seems unnecessary
+        )*
     '}';
 
 fragment OwnerReference:
@@ -128,11 +178,41 @@ fragment OwnerReference:
 fragment StakeholderReference:
     'stakeholder' involvedStakeholders+=[Stakeholder:ID] (',' evolvesReqs+=[Requirement:ID])*;
 
-// -- Items likely belonging to other DSLs but referenced within reqspec ---------- 
+// == Items likely belonging to other hazard analysis DSL ==================
+// == and physical architecture DSL but referenced within reqspec ========== 
 
 /* 
  * Need to look into the EMV2 reference to define a hazard - also consider looking at AdvoCATE
  */
+
+Component:
+    /* TODO - Populate Here */ ('comp'|'component') NameTitle ComponentBlock?;
+
+fragment ComponentBlock:
+    '{'
+        (
+            Description |
+            Id |
+            Issues |
+            functions+=CompFunction | CompFunctionRef |
+            hazards+=Hazard | HazardRef
+        )*
+    '}';
+
+fragment HazardRef:
+    ('ref'|'references') ('haz'|'hazard') referencedHazards+=[Hazard:ID] (',' referencedHazards+=[Hazard:ID])*;
+
+fragment CompFunctionRef:
+    ('ref'|'references') ('func'|'function') referencedFunctions+=[CompFunction:ID] (',' referencedFunctions+=[CompFunction:ID])*;
+
+CompFunction:
+    /* TODO - Populate Here */ 'func' NameTitle;// FuncBlock?;
+
+// fragment FuncBlock:
+//     '{'
+
+//     '}';
+
 Hazard:
     'hazard' NameTitle;
 
@@ -149,7 +229,7 @@ Category:
 // == Stuff that'll probably end up in common.langium ==============================
 // 
 fragment Id:
-    'id' name=UUID;
+    'id' id=UUID;
 
 fragment NameTitle:
     name=ID (':' title=STRING)?;
