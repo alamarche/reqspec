@@ -1,110 +1,170 @@
 grammar ReqSpec
 
-import './common'
+entry Model:
+    items+=(
+                Requirement | Goal |
+                Category | 
+                Personnel
+            )*;
 
-entry RequirementsModel:
-    items+=Version items+=(
-                            Requirement | 
-                            // RequirementTemplate |
-                            RequirementSet | 
-                            // RequirementSetTemplate |
-                            RequirementDoc |
-                            // RequirementDocTemplate |
-                            Goal | 
-                            // GoalTemplate |
-                            GoalSet | 
-                            // GoalSetTemplate |
-                            GoalDoc |
-                            // GoalDocTemplate |
-                            Category
-                           )*;
-
-// GoalDocTemplate:
-//     /* TODO implement rule */ {infer GoalDocTemplate};
-
-// GoalSetTemplate:
-//     /* TODO implement rule */ {infer GoalSetTemplate};
-
-// GoalTemplate:
-//     /* TODO implement rule */ {infer GoalTemplate};
-
-// RequirementDocTemplate:
-//     /* TODO implement rule */ {infer RequirementDocTemplate};
-
-// RequirementSetTemplate:
-//     /* TODO implement rule */ {infer RequirementSetTemplate};
-
-// RequirementTemplate:
-//     /* TODO implement rule */ {infer RequirementTemplate};
-
-RequirementDoc:
-    /* TODO implement rule */ {infer RequirementDoc};
-
-GoalDoc:
-    /* TODO implement rule */ {infer GoalDoc};
+// 
+// == Goal section =================================================
+// 
 
 GoalSet:
-    /* TODO implement rule */ {infer GoalSet};
+    'goal' 'set' NameTitle GoalSetBlock?;
 
-RequirementSet:
-    /* TODO implement rule */ {infer RequirementSet};
-
-/*
- * Version is used to help handle changes to the DSL over time and to indicate the type of reqspec document being created
- * 
- * * `basic` - indicates a barebones form of ReqSpec for beginner users. Physical architecture and functional architecture 
- * are baked into the same reqspec file
- * * `advanced` - indicates a form of reqspec that interacts with a dedicated physical architecture DSL
- * * `aadl` meant to interface with AADL language artifacts
- */
-Version:
-    'reqspec' 'v' number=Float type='basic'|'advanced'|'aadl';
+fragment GoalSetBlock:
+    '{'
+        // AllocatingArchitecturalElement
+        // UseConstantSet
+        Description?
+        'goals' declaredGoals+=Goal*
+        'reuses' ('goals') referencedGoals+=[Goal:ID]*
+        Issues?
+    '}';
 
 Goal:
-    'goal' NameTitle;
+    'goal' NameTitle GoalBlock?;
+
+fragment GoalBlock:
+    '{'
+        (
+            ReqGoalStmt |
+            // Constant
+            // WhenCondition
+            
+            ( 'refines' refinesGoals+=[Goal:ID] (',' refinesGoals+=[Goal:ID])*                  ) |
+            ( 'conflicts' 'with' conflictingGoals+=[Goal:ID] (',' conflictingGoals+=[Goal:ID])* ) |
+            ( 'evolves' evolvesGoals+=[Goal:ID] (',' evolveGoals+=[Goal:ID])*                   ) 
+            // see requirement  (see if we can embed markdown for hyperlinks?)
+            // see document     (see if we can embed markdown for hyperlinks?)
+        )*
+    '}';
+
+fragment GoalReference:
+    'see' 'goal' referencedGoal+=[Goal:ID] (',' referencedGoal+=[Goal:ID])*;
+
+// 
+// == Requirement section =================================================
+// 
 
 Requirement:
-    ('req'|'requirement') NameTitle RequirementBlock?;
+    ('req' | 'requirement') NameTitle RequirementBlock?;
+
+// Common between reqs and goals
+fragment ReqGoalStmt:
+    Id | CategoryRef | Description | Rationale |
+    Dropped | StakeholderReference | OwnerReference | GoalReference |
+    Issues;
 
 fragment RequirementBlock:
     '{'
-        TargetElement?
-        UniqueID?     //uuid
-        (('cats' | 'categories') categories+=[Category] (',' categories+=[Category])* )?
-        Description
-        // Constant
-        // In Modes
-        Rationale?
-        MitigateHazard?
-        ('refines' 'reqs'? refinesReqs+=[Requirement] (',' refinesReqs+=[Requirement])* )?
-        ('decomposes' 'reqs'? decomposesReqs+=[Requirement] (',' decomposesReqs+=[Requirement])* )?
-        ('inherits' 'reqs'? inheritsReqs+=[Requirement] (',' inheritsReqs+=[Requirement])* )?
-        Dropped?
-        ('see' 'goals' relatedGoals+=[Goal] (',' relatedGoals+=[Goal])* )?
-        ('see' 'docs' relatedDoc+=STRING (',' relatedDocs+=STRING)* )?
-        (('issues' | 'defects') issues+=STRING (',' issues+=STRING)* )?
-
+        (
+            ReqGoalStmt |
+            // AllocatingArchitecturalElement
+            // Variable |
+            // WhenCondition |
+            // Predicate |
+            MitigatesHazard |
+            ( 'refines' refinesReqs+=[Requirement:ID]       (',' refinesReqs+=[Requirement:ID])*    ) |
+            ( 'decomposes' decomposesReqs+=[Requirement:ID] (',' decomposesReqs+=[Requirement:ID])* ) |
+            ( 'inherits' inheritsReqs+=[Requirement:ID]     (',' inheritsReqs+=[Requirement:ID])*   ) |
+            ( 'evolves' evolvesReqs+=[Requirement:ID]       (',' evolvesReqs+=[Requirement:ID])*    )
+            // see requirement  (see if we can embed markdown for hyperlinks?)
+            // see document     (see if we can embed markdown for hyperlinks?)
+        )*
     '}';
+
+RequirementSet:
+    ('req'|'requirement') 'set' NameTitle RequirementSetBlock?; // ConstantSet
+
+fragment RequirementSetBlock:
+    '{'
+        Description?
+        // see document     (see if we can embed markdown for hyperlinks?)
+        GoalReference?
+        // VariableReference
+        'reqs'|'requirements' declaredRequirements+=Requirement*
+        'reuses' ('reqs'|'requirements') referencedRequirements+=[Requirement:ID]*
+        Issues?
+    '}';
+
+RequirementDocument:
+    ('req' | 'requirement') ('doc'|'document') NameTitle; 
+
+// 
+// == Items common between goals, requirements, etc. ==============================
+// 
+
+fragment Dropped:
+    'dropped' reason=STRING;
+
+fragment Issues:
+    'issues' issueDescription+=STRING;
 
 fragment Rationale:
     'rationale' rationale=STRING;
 
-fragment MitigateHazard:
-    'mitigates' hazards+=[Hazard];
+// -- Items referring to people ----------------------------------------------------
+Personnel:
+    {infer Stakeholder} 'stakeholder' name=ID PersonnelBlock? |
+    {infer Developer} 'developer' name=ID PersonnelBlock?;
 
-fragment Dropped:
-    'dropped' droppedReasons+=STRING;
+fragment PersonnelBlock:
+    '{'
+        ('name' personName=STRING)?
+        ('title' title=STRING)?
+        Description?
+        ('role' role=STRING)?
+        ('email' email=STRING)?
+        ('phone' phone=STRING)?
+        // supervisor - seems unnecessary
+    '}';
 
+fragment OwnerReference:
+    'owned' 'by'? owner=[Developer:ID];
+
+fragment StakeholderReference:
+    'stakeholder' involvedStakeholders+=[Stakeholder:ID] (',' evolvesReqs+=[Requirement:ID])*;
+
+// -- Items likely belonging to other DSLs but referenced within reqspec ---------- 
+
+/* 
+ * Need to look into the EMV2 reference to define a hazard - also consider looking at AdvoCATE
+ */
+Hazard:
+    'hazard' NameTitle;
+
+fragment MitigatesHazard:
+    'mitigates' mitigatedHazards+=[Hazard:ID];
+
+// 
+// == Things that are likely better off in config files ============================
+// 
 Category:
-    ('cat'|'category') NameTitle ('{' subCategories+=Category+ '}')?;
-    
+    ('cat'|'category') NameTitle;
 
-// Variable:
-//     'var' NameTitle '{'
-//         units=[VariableUnits:QualifiedName] 
-//         value=Float
-//     '}';
+// 
+// == Stuff that'll probably end up in common.langium ==============================
+// 
+fragment Id:
+    'id' name=UUID;
 
-// VariableUnits:
-//     'unit' NameTitle a=STRING;
+fragment NameTitle:
+    name=ID (':' title=STRING)?;
 
+fragment Description:
+    'desc' description=STRING;
+
+fragment CategoryRef:
+    ('cat'|'category') categories+=[Category:ID] (',' categories+=[Category:ID])*;
+
+hidden terminal WS: /\s+/;
+terminal UUID: /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
+terminal ID: /[_a-zA-Z][\w_]*/;
+terminal INT returns number: /[0-9]+/;
+terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
+
+hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
+hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;

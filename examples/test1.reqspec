@@ -1,16 +1,38 @@
-reqspec v 1.0 basic
+cat Rofl : "Derp"
+cat Lmao : "Herp"
 
-cat Mechanical : "Mechanical category" {
-    cat Plumbing : "Plumbing"
+developer Andrew {
+    name "Andrew LaMarche"
+    role "Systems Engineer"
 }
 
-goal Goal1 : "A goal"
+developer Marco {
+    name "Marco Cauchi"
+    role "Software Engineer"
+}
 
-req Req0 : "My zeroth requirement's title"
+stakeholder AppsDev {
+    desc "Nuvera Applications Development"
+}
 
-req Req1 : "My first requirement's title" {
-    
-    categories Mechanical
-    desc "This is a description"
-    
+goal Goal0 : "Goal to be evolved"
+
+goal Goal1 : "Test Goal" {
+    cat Rofl
+}
+
+goal Goal2 : "Another goal" {
+    desc "The engine needs to produce 125 kW of net power"
+    cat Lmao
+    conflicts with Goal1
+    evolves Goal0
+    stakeholder AppsDev
+    rationale "Needs to produce sufficient power to be usable in heavy-duty trucking hybrids"
+}
+
+req Requirement0 : "This is a test req" {
+    desc "Lol"
+    id a2c5ab31-60b4-46b0-92fc-512c8001cd0b
+    see goal Goal1
+
 }
