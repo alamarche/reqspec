@@ -37,34 +37,34 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
         
         /* List of properties we want to include in the hover content
          *  TODO - implement how to fetch x-references */
-        let properties = [
-            '$type',
-            'name',
-            'title',
-            'description',
-            'categories',
-            'owner',
-            // 'mitigatedHazards',
-            // 'decomposesReqs',
-            // 'evolvesReqs',
-            // 'inheritsReqs',
-            // 'referencedRequirements'
-        ]
+        let properties = {
+            "$type": "Type",
+            "name": "Name",
+            "title": "Title",
+            "description": "Description",
+            "categories": "Categories",
+            "owner": "Owner",
+            // "mitigatedHazards",
+            // "decomposesReqs",
+            // "evolvesReqs",
+            // "inheritsReqs",
+            // "referencedRequirements"
+        }
         
-        let content: string = ''
-        let keys = Object.keys(node)
-        let vals = Object.values(node)
+        let content: string = ""
+        let keys:string[] = Object.keys(node)   // of the target node
+        let vals:string[] = Object.values(node) // of the target node
         
-        for (var index in properties) {
-            let keyIndex = keys.indexOf(properties[index])
-            let key = keys[keyIndex]
+        for (var [key, prettyName] of Object.entries(properties) ) {
+            
+            let keyIndex = keys.indexOf(key)
             let val = vals[keyIndex]
             
             if (keyIndex > -1) {
                 if (val.length <= 0) {
                     continue
                 }
-                content = content.concat(`**${key}**: ${val}\n\n`)
+                content = content.concat(`**${prettyName}**: ${val}\n\n`)
             }
         }
 
