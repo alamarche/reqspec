@@ -35,10 +35,12 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
     
     protected override getAstNodeHoverContent(node: AstNode): MaybePromise<Hover | undefined> {
         
-        // let nodeStream = streamContents(node)
-        let propertiesOfInterest = [
+        /* List of properties we want to include in the hover content
+         *  TODO - implement how to fetch x-references */
+        let properties = [
             '$type',
             'name',
+            'title',
             'description',
             'categories',
             'owner',
@@ -49,21 +51,20 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
             // 'referencedRequirements'
         ]
         
-        // let newNode = node as GenericAstNode
         let content: string = ''
         let keys = Object.keys(node)
         let vals = Object.values(node)
         
-        for (var index in keys) {
-            let key = keys[index]
-            let val:string = vals[index]
-
-            if ((val.length) <= 0) {
-                continue
-            }
+        for (var index in properties) {
+            let keyIndex = keys.indexOf(properties[index])
+            let key = keys[keyIndex]
+            let val = vals[keyIndex]
             
-            if (propertiesOfInterest.indexOf(key) > -1) {
-                content = content.concat(`${key}: ${val}\n\n`)
+            if (keyIndex > -1) {
+                if (val.length <= 0) {
+                    continue
+                }
+                content = content.concat(`**${key}**: ${val}\n\n`)
             }
         }
 
