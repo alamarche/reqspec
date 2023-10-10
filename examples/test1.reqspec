@@ -61,7 +61,7 @@ req set ReqSet1 : "This is the first req set" {
 
 goal doc SystemGoals : "System Goals Document" {
     desc "These are the goals that the system should aspire to"
-    req UniqueRequirementWeForgot : "We can define this inside the document if we want" {
+    req UniqueRequirementWeForgot : "We can **~~define this inside the document~~** if we want" {
         cat Lmao
     }
     references goal sets GoalSet1
@@ -73,7 +73,6 @@ hazard Fire : "Generic fire with chance to spread"
 comp MyFirstComponent : "First component!" {
     ref func BlowAir
     ref haz Fire
-
 }
 
 func BlowAir : "Generic function that can be referenced"

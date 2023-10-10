@@ -39,7 +39,9 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
          *  TODO - implement how to fetch x-references */
         let properties = {
             "$type": "Type",
-            "name": "Name",
+            // "name": "Identifier",
+            "id": "Unique ID",
+            "personName": "Name",
             "title": "Title",
             "description": "Description",
             "categories": "Categories",
@@ -64,7 +66,7 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
                 if (val.length <= 0) {
                     continue
                 }
-                content = content.concat(`**${prettyName}**: ${val}\n\n`)
+                content = content.concat(`* **${prettyName}**: ${val}\n`)
             }
         }
 
