@@ -118,7 +118,7 @@ export class ReqSpecCompletionProvider extends DefaultCompletionProvider {
             {
                 label: 'goal (new)',
                 kind: CompletionItemKind.Snippet,
-                insertText: 'req ${1:name} : \"${2:title}\" {\n' +
+                insertText: 'goal ${1:name} : \"${2:title}\" {\n' +
                               `\tid ${v4()}\n` +
                               '\tcat ${3:categories}\n' +
                               '\tdesc \"${4:description}\"\n' +
