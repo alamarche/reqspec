@@ -1,6 +1,8 @@
 {
     "name": "reqspec",
-    "description": "Please enter a brief description here",
+    "description": "A requirements DSL language server to expedite and help guide requirements development",
+    "author": {"name": "Andrew LaMarche", "email": "andrew@lamarche.dev", "url": "https://lamarche.dev"},
+    "repository": {"type": "git", "url": "https://github.com/alamarche/reqspec"},
     "version": "0.0.1",
     "files": [
         "bin"
