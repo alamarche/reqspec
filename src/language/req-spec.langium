@@ -37,6 +37,7 @@ GoalDocument:
 fragment GoalDocumentBlock:    
     '{'
         (
+            Id |
             Description |
             Issues | 
             (declaredRequirements+=Requirement) |
@@ -53,6 +54,7 @@ fragment GoalSetBlock:
         (
             // AllocatingArchitecturalElement
             // UseConstantSet
+            Id |
             Description |
             (declaredGoals+=Goal) |
             ( ('refs'|'references') ('goals') referencedGoals+=[Goal:ID] (',' referencedGoals+=[Goal:ID])* ) |

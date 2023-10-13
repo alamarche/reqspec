@@ -56,7 +56,8 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
         }
         
         let content: string = ""
-        let [keys, vals] = Object.entries(node)   // of the target node
+        let keys = Object.keys(node)
+        let vals = Object.values(node)   // of the target node
         
         for (var [key, prettyName] of Object.entries(properties) ) {
             
