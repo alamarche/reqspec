@@ -1,5 +1,6 @@
 # ReqSpec DSL
 
+<img alt="Demonstration gif" src="./static/output.gif" width=800></img>
 
 ## Overview
 The ReqSpec DSL is a language server developed using [Langium][langium] which aims to move requirements engineering **away** from development within industry-standard, heavy-weight solutions such as [Polarion][polarion], [Rational Doors][doors], [Dassault Reqtify][def], and [Jama][reqtify] and toward a solution that:
