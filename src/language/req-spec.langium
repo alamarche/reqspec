@@ -112,6 +112,7 @@ RequirementSet:
 fragment RequirementSetBlock:
     '{'
         (
+            Id |
             Description |
             // see document     (see if we can embed markdown for hyperlinks?)
             GoalReference |
@@ -128,6 +129,7 @@ RequirementDocument:
 fragment RequirementDocumentBlock:    
     '{'
         (
+            Id |
             Description |
             Issues | 
             (declaredRequirements+=Requirement) |
@@ -162,6 +164,7 @@ Personnel:
 fragment PersonnelBlock:
     '{'
         (
+            Id |
             ('name' personName=STRING) |
             ('title' title=STRING) |
             Description |
