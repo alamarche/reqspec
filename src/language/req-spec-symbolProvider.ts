@@ -1,4 +1,4 @@
-import {AstNode, AstNodeHoverProvider, DefaultCompletionProvider, DefaultDocumentSymbolProvider, GenericAstNode, LangiumDocument, LangiumServices, MaybePromise, Reference} from 'langium'
+import {AstNode, AstNodeHoverProvider, DefaultCompletionProvider, DefaultDocumentSymbolProvider, GenericAstNode, LangiumDocument, LangiumServices, MaybePromise, Reference, isReference} from 'langium'
 import { Hover, SymbolKind } from 'vscode-languageserver-types'
 import { CompletionList, CompletionItem, CompletionParams, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver'
 import { v4 } from 'uuid'
@@ -47,12 +47,21 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
             "title": "Title",
             "description": "Description",
             "categories": "Categories",
+            "rationale": "Rationale",
             "owner": "Owner",
-            // "mitigatedHazards",
-            // "decomposesReqs",
-            // "evolvesReqs",
-            // "inheritsReqs",
-            // "referencedRequirements"
+            "involvedStakeholders": "Stakeholders",
+            "mitigatedHazards": "Mitigated Hazards",
+            "referencedHazards": "Referenced Hazards",
+            "hazards": "Owned Hazards",
+            "functions": "Owned Functions",
+            "decomposesReqs": "Decomposes",
+            "evolvesReqs": "Evolves",
+            "inheritsReqs": "Inherits",
+            "refinesReqs": "Refines",
+            "refinesGoals": "Refines",
+            "evolvesGoals": "Evolves",
+            "conflictingGoals": "Conflicts with",
+            "referencedRequirements": "References"
         }
         
         let content: string = `#### ${(node as GenericAstNode).name}:\n`
@@ -68,13 +77,20 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
             if (keyIndex > -1) {
                 if (val.length <= 0) {
                     continue
-                } 
+                }
                 
                 if (Array.isArray(val)) {
                     content = content.concat(`* **${prettyName}**: `)
-                    // val.forEach((val) => console.log(isReference(val)))
-                    val.forEach((val) => content = content.concat(`${(val as Reference).$refText}, `))
-                } else if (typeof val === "string") content = content.concat(`* **${prettyName}**: ${val}\n`)
+                    val.forEach((elem) => {
+                        let refNode = (elem as Reference).ref as GenericAstNode
+                        if (refNode) {
+                            elem = refNode as GenericAstNode
+                            content = content.concat(`${elem.name}${elem.title ? " (" + elem.title + ")" : ""},` )
+                        }  
+                    })
+                    content = content.concat('\n')
+                } else if (isReference(val)) content = content.concat(`${(val as Reference).$refText}\n`)
+                else if (typeof val === "string") content = content.concat(`* **${prettyName}**: ${val}\n`)
             }
         }
 
