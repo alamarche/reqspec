@@ -1,4 +1,4 @@
-import {AstNode, AstNodeHoverProvider, DefaultCompletionProvider, DefaultDocumentSymbolProvider, LangiumDocument, LangiumServices, MaybePromise} from 'langium'
+import {AstNode, AstNodeHoverProvider, DefaultCompletionProvider, DefaultDocumentSymbolProvider, GenericAstNode, LangiumDocument, LangiumServices, MaybePromise, Reference} from 'langium'
 import { Hover, SymbolKind } from 'vscode-languageserver-types'
 import { CompletionList, CompletionItem, CompletionParams, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver'
 import { v4 } from 'uuid'
@@ -42,7 +42,7 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
         let properties = {
             "$type": "Type",
             // "name": "Identifier",
-            "id": "Unique ID",
+            "id": "UUID",
             "personName": "Name",
             "title": "Title",
             "description": "Description",
@@ -55,9 +55,10 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
             // "referencedRequirements"
         }
         
-        let content: string = ""
+        let content: string = `#### ${(node as GenericAstNode).name}:\n`
         let keys = Object.keys(node)
         let vals = Object.values(node)   // of the target node
+        console.log(Object.entries(node))
         
         for (var [key, prettyName] of Object.entries(properties) ) {
             
@@ -67,8 +68,13 @@ export class ReqSpecNodeHoverProvider extends AstNodeHoverProvider {
             if (keyIndex > -1) {
                 if (val.length <= 0) {
                     continue
-                }
-                content = content.concat(`* **${prettyName}**: ${val}\n`)
+                } 
+                
+                if (Array.isArray(val)) {
+                    content = content.concat(`* **${prettyName}**: `)
+                    // val.forEach((val) => console.log(isReference(val)))
+                    val.forEach((val) => content = content.concat(`${(val as Reference).$refText}, `))
+                } else if (typeof val === "string") content = content.concat(`* **${prettyName}**: ${val}\n`)
             }
         }
 
