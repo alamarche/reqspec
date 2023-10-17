@@ -181,7 +181,7 @@ fragment OwnerReference:
     'owned' 'by'? owner=[Developer:ID];
 
 fragment StakeholderReference:
-    'stakeholder' involvedStakeholders+=[Stakeholder:ID] (',' evolvesReqs+=[Requirement:ID])*;
+    'stakeholder' involvedStakeholders+=[Stakeholder:ID] (',' involvedStakeholders+=[Stakeholder:ID])*;
 
 // == Items likely belonging to other hazard analysis DSL ==================
 // == and physical architecture DSL but referenced within reqspec ========== 

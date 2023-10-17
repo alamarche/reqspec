@@ -127,38 +127,40 @@ export class ReqSpecCompletionProvider extends DefaultCompletionProvider {
         if (list !== undefined) {
           const snippets: CompletionItem[]  = [
             {
-                label: 'requirement (new)',
+                label: '(new) requirement',
                 kind: CompletionItemKind.Snippet,
                 insertText: 'req ${1:name} : \"${2:title}\" {\n' +
                             `\tid ${v4()}\n` +
                             '\tcat ${3:categories}\n' +
                             '\tdesc \"${4:description}\"\n' +
                             '\trationale \"${5:rationale}\"\n' +
+                            '\tstakeholder ${6:stakeholders}\n' +
                             '}',
                 documentation: 'Define a new requirement',
                 insertTextFormat: InsertTextFormat.Snippet
             },
             {
-                label: 'goal (new)',
+                label: '(new) goal',
                 kind: CompletionItemKind.Snippet,
                 insertText: 'goal ${1:name} : \"${2:title}\" {\n' +
                               `\tid ${v4()}\n` +
                               '\tcat ${3:categories}\n' +
                               '\tdesc \"${4:description}\"\n' +
                               '\trationale \"${5:rationale}\"\n' +
+                              '\tstakeholder ${6:stakeholder}\n' +
                               '}',
                 documentation: 'Define a new goal',
                 insertTextFormat: InsertTextFormat.Snippet
               },
               {
-                label: 'id (new)',
+                label: '(new) id',
                 kind: CompletionItemKind.Snippet,
                 insertText: `id ${v4()}`,
                 documentation: 'Add a UUID',
                 insertTextFormat: InsertTextFormat.Snippet
               },
               {
-                label: 'stakeholder (new)',
+                label: '(new) stakeholder',
                 kind: CompletionItemKind.Snippet,
                 insertText: 'stakeholder ${1:varName} {\n' +
                             `\tid ${v4()}\n` +
@@ -171,7 +173,7 @@ export class ReqSpecCompletionProvider extends DefaultCompletionProvider {
                 insertTextFormat: InsertTextFormat.Snippet
               },
               {
-                label: 'developer (new)',
+                label: '(new) developer',
                 kind: CompletionItemKind.Snippet,
                 insertText: 'developer ${1:varName} {\n' +
                             `\tid ${v4()}\n` +
@@ -184,7 +186,7 @@ export class ReqSpecCompletionProvider extends DefaultCompletionProvider {
                 insertTextFormat: InsertTextFormat.Snippet
               },
               {
-                label: 'component (new)',
+                label: '(new) component',
                 kind: CompletionItemKind.Snippet,
                 insertText: 'comp ${1:name} : \"${2:title}\" {\n' +
                                 `\tid ${v4()}\n` +
