@@ -72,7 +72,16 @@ hazard Fire : "Generic fire with chance to spread"
 
 comp MyFirstComponent : "First component!" {
     ref func BlowAir
-    ref haz Fire
+    ref hazard Fire
 }
 
 func BlowAir : "Generic function that can be referenced"
+
+goal TestGoal : "Yet another test" {
+    id f176d53e-e9f3-4de3-a99e-b95bad6ffb7d
+    cat Lmao
+    desc "Derp Derp Derp"
+    rationale "Herp"
+    stakeholder AppsDev
+    owned by Chief
+}
