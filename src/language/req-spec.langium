@@ -147,7 +147,10 @@ fragment RequirementDocumentBlock:
 fragment ReqGoalStmt:
     Id | CategoryRef | Description | Rationale |
     Dropped | StakeholderReference | OwnerReference | GoalReference |
-    Issues;
+    Issues | Criticality;
+
+fragment Criticality:
+    ('crit' | 'criticality') criticality=('MUST_HAVE' | 'SHOULD_HAVE' | 'NOT_NEEDED');
 
 fragment Dropped:
     'dropped' reason=STRING;
