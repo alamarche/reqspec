@@ -3,12 +3,15 @@ import * as path from 'path';
 import {
     LanguageClient, LanguageClientOptions, ServerOptions, TransportKind
 } from 'vscode-languageclient/node';
+import { registerCommands } from './command';
 
 let client: LanguageClient;
 
 // This function is called when the extension is activated.
 export function activate(context: vscode.ExtensionContext): void {
     client = startLanguageClient(context);
+    registerCommands(context)
+
 }
 
 // This function is called when the extension is deactivated.
