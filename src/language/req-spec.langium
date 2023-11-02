@@ -161,7 +161,7 @@ fragment Dropped:
     'dropped' reason=STRING;
 
 fragment Issues:
-    'issues' issueDescription+=STRING;
+    'issues' issueDescription+=STRING (',' issueDescription+=STRING)*;
 
 fragment Rationale:
     'rationale' rationale=STRING;
