@@ -69,6 +69,7 @@ fragment GoalBlock:
     '{'
         (
             ReqGoalStmt |
+            GoalCriticality |
             // Constant
             // WhenCondition
             
@@ -94,6 +95,7 @@ fragment RequirementBlock:
     '{'
         (
             ReqGoalStmt |
+            ReqCriticality |
             // AllocatingArchitecturalElement
             // Variable |
             // WhenCondition |
@@ -147,10 +149,13 @@ fragment RequirementDocumentBlock:
 fragment ReqGoalStmt:
     Id | CategoryRef | Description | Rationale |
     Dropped | StakeholderReference | OwnerReference | GoalReference |
-    Issues | Criticality;
+    Issues;
 
-fragment Criticality:
+fragment ReqCriticality:
     ('crit' | 'criticality') criticality=('MUST_HAVE' | 'SHOULD_HAVE' | 'NOT_NEEDED');
+
+fragment GoalCriticality:
+    ('crit' | 'criticality') criticality=FLOAT;
 
 fragment Dropped:
     'dropped' reason=STRING;
@@ -252,6 +257,7 @@ hidden terminal WS: /\s+/;
 terminal UUID: /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal INT returns number: /[0-9]+/;
+terminal FLOAT returns number: INT (. INT)?;
 terminal STRING: /"(\\.|[^"\\])*"|'(\\.|[^'\\])*'/;
 
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
