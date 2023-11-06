@@ -104,6 +104,7 @@ fragment RequirementBlock:
             ( 'refines' refines+=[Requirement:ID]       (',' refines+=[Requirement:ID])*    ) |
             ( 'decomposes' decomposes+=[Requirement:ID] (',' decomposes+=[Requirement:ID])* ) |
             ( 'inherits' inherits+=[Requirement:ID]     (',' inherits+=[Requirement:ID])*   ) |
+            ( 'conflicts' 'with' conflicting+=[Requirement:ID] (',' conflicting+=[Requirement:ID])* ) |
             ( 'evolves' evolves+=[Requirement:ID]       (',' evolves+=[Requirement:ID])*    )
             // see requirement  (see if we can embed markdown for hyperlinks?)
             // see document     (see if we can embed markdown for hyperlinks?)
