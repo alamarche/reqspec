@@ -25,10 +25,10 @@ export function generateSphinxNeedsObjects(model: Model, type: NeedsObject = "Re
                     fileNode.append(`.. need:: ${goal.title ?? 'Placeholder Title'}\n` +
                                         `\t:id: ${goal.name}\n` +
                                         `${arrayRefStringer(goal.categories, 'tags')}` +
-                                        `${arrayRefStringer(goal.referencedGoal, 'referencedGoals')}` +
-                                        `${arrayRefStringer(goal.evolvesGoals, 'evolves')}` +
-                                        `${arrayRefStringer(goal.refinesGoals, 'refines')}` +
-                                        `${arrayRefStringer(goal.conflictingGoals, 'conflictsWith')}\n`
+                                        `${arrayRefStringer(goal.references, 'referencedGoals')}` +
+                                        `${arrayRefStringer(goal.evolves, 'evolves')}` +
+                                        `${arrayRefStringer(goal.refines, 'refines')}` +
+                                        `${arrayRefStringer(goal.conflicting, 'conflictsWith')}\n`
                     )
                     break
                 case "Requirement":
@@ -36,12 +36,12 @@ export function generateSphinxNeedsObjects(model: Model, type: NeedsObject = "Re
                     fileNode.append(`.. req:: ${req.title ?? 'Placeholder Title'}\n` +
                                         `\t:id: ${req.name}\n` +
                                         `${arrayRefStringer(req.categories, 'tags')}` +
-                                        `${arrayRefStringer(req.referencedGoal, 'referencedGoals')}` +
-                                        `${arrayRefStringer(req.evolvesReqs, 'evolves')}` +
-                                        `${arrayRefStringer(req.refinesReqs, 'refines')}` +
-                                        `${arrayRefStringer(req.inheritsReqs, 'inherits')}` +
+                                        `${arrayRefStringer(req.references, 'referencedGoals')}` +
+                                        `${arrayRefStringer(req.evolves, 'evolves')}` +
+                                        `${arrayRefStringer(req.refines, 'refines')}` +
+                                        `${arrayRefStringer(req.inherits, 'inherits')}` +
                                         `${arrayRefStringer(req.mitigatedHazards, 'mitigates')}` +
-                                        `${arrayRefStringer(req.decomposesReqs, 'decomposes')}\n`)
+                                        `${arrayRefStringer(req.decomposes, 'decomposes')}\n`)
                     break
             }
         }

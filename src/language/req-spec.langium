@@ -73,16 +73,16 @@ fragment GoalBlock:
             // Constant
             // WhenCondition
             
-            ( 'refines' refinesGoals+=[Goal:ID] (',' refinesGoals+=[Goal:ID])*                  ) |
-            ( 'conflicts' 'with' conflictingGoals+=[Goal:ID] (',' conflictingGoals+=[Goal:ID])* ) |
-            ( 'evolves' evolvesGoals+=[Goal:ID] (',' evolveGoals+=[Goal:ID])*                   ) 
+            ( 'refines' refines+=[Goal:ID] (',' refines+=[Goal:ID])*                  ) |
+            ( 'conflicts' 'with' conflicting+=[Goal:ID] (',' conflicting+=[Goal:ID])* ) |
+            ( 'evolves' evolves+=[Goal:ID] (',' evolves+=[Goal:ID])*                   ) 
             // see requirement  (see if we can embed markdown for hyperlinks?)
             // see document     (see if we can embed markdown for hyperlinks?)
         )*
     '}';
 
 fragment GoalReference:
-    'see' 'goal' referencedGoal+=[Goal:ID] (',' referencedGoal+=[Goal:ID])*;
+    'see' 'goal' references+=[Goal:ID] (',' references+=[Goal:ID])*;
 
 // 
 // == Requirement section =================================================
@@ -101,10 +101,10 @@ fragment RequirementBlock:
             // WhenCondition |
             // Predicate |
             MitigatesHazard |
-            ( 'refines' refinesReqs+=[Requirement:ID]       (',' refinesReqs+=[Requirement:ID])*    ) |
-            ( 'decomposes' decomposesReqs+=[Requirement:ID] (',' decomposesReqs+=[Requirement:ID])* ) |
-            ( 'inherits' inheritsReqs+=[Requirement:ID]     (',' inheritsReqs+=[Requirement:ID])*   ) |
-            ( 'evolves' evolvesReqs+=[Requirement:ID]       (',' evolvesReqs+=[Requirement:ID])*    )
+            ( 'refines' refines+=[Requirement:ID]       (',' refines+=[Requirement:ID])*    ) |
+            ( 'decomposes' decomposes+=[Requirement:ID] (',' decomposes+=[Requirement:ID])* ) |
+            ( 'inherits' inherits+=[Requirement:ID]     (',' inherits+=[Requirement:ID])*   ) |
+            ( 'evolves' evolves+=[Requirement:ID]       (',' evolves+=[Requirement:ID])*    )
             // see requirement  (see if we can embed markdown for hyperlinks?)
             // see document     (see if we can embed markdown for hyperlinks?)
         )*
