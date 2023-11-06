@@ -7,6 +7,7 @@ import type { ReqSpecServices } from './req-spec-module';
 export namespace ReqSpecIssueCodes {
     export const CapitalLetter = 'first-letter-capital'
     export const SelfReference = 'self-reference'
+    export const DuplicateReference = 'dupe-reference'
 }
 
 /**
@@ -18,8 +19,14 @@ export function registerValidationChecks(services: ReqSpecServices) {
 
     const checks: ValidationChecks<ReqSpecAstType> = {
         AstNode:  validator.checkStartsWithCapital,
-        Requirement: validator.checkSelfReference<Requirement>,
-        Goal: validator.checkSelfReference<Goal>
+        Requirement: [
+            validator.checkSelfReference<Requirement>,
+            validator.checkDuplicateReference<Requirement>
+        ],
+        Goal: [
+            validator.checkSelfReference<Goal>,
+            validator.checkDuplicateReference<Goal>
+        ]
     };
 
     registry.register(checks, validator);
@@ -36,14 +43,37 @@ function _checkSelfReference<T extends AstNode>(self:T, refs: Array<Reference<T>
     return false
 }
 
-interface ReqGoalRefs extends AstNode {
-    name: string
+/**
+ * 
+ * @param refs An array of cross-references from any grammar-element property
+ * @returns A list of cross-reference names that are duplicate
+ */
+function _countReferences(refs: Array<Reference<AstNode>>): boolean {
+
+    // Create set of unique AstNode references
+    let refNames = refs.map((ref) => ref.$nodeDescription!.name)
+    let set: Set<string> = new Set(refNames)
+
+    if ( refs.length === set.size || refs.length === 0) return false // exit if all unique or no references supplied
+
+    return true
+}
+
+interface Named {
+    name: string 
+}
+
+interface ReqGoalRefs extends AstNode, Named {
     decomposes?: Array<Reference>
     evolves?: Array<Reference>
     inherits?: Array<Reference>
     refines?: Array<Reference>
     conflicting?: Array<Reference>
 }
+
+const arrayReferences = [
+    'decomposes', 'evolves', 'inherits', 'refines', 'conflicting'
+] as (keyof Omit<ReqGoalRefs, keyof AstNode | 'name'>)[]
 
 /**
  * Implementation of custom validations.
@@ -73,27 +103,29 @@ export class ReqSpecValidator {
      */
     checkSelfReference<T extends ReqGoalRefs>(item: T, accept: ValidationAcceptor): void { //<T extends AstNode & {name: string}>
         
-        if ( item.decomposes && _checkSelfReference(item, item.decomposes) ) // TODO - type casting shouldn't be needed
-            accept('error', `${item.$type} '${item.name}' cannot decompose itself`, 
-            { node: item, property: 'decomposes' as Properties<T>, code: ReqSpecIssueCodes.SelfReference } )
+        arrayReferences.forEach(refType => {
+            if ( item[refType] && _checkSelfReference(item, item[refType]!) ) {
+                var relation = refType.slice(0,-1)
+                accept('error', `${item.$type} '${item.name}' cannot ${relation} itself`, 
+                       { node: item, property: refType as Properties<T>, code: ReqSpecIssueCodes.SelfReference } 
+                )
+            }
+        })
         
-        if ( item.evolves && _checkSelfReference(item, item.evolves) ) // TODO - type casting shouldn't be needed
-            accept('error', `${item.$type} '${item.name}' cannot evolve itself`, 
-            { node: item, property: 'evolves' as Properties<T>, code: ReqSpecIssueCodes.SelfReference } )
-
-        if ( item.refines && _checkSelfReference(item, item.refines) ) // TODO - type casting shouldn't be needed
-            accept('error', `${item.$type} '${item.name}' cannot refine itself`, 
-            { node: item, property: 'inherits' as Properties<T>, code: ReqSpecIssueCodes.SelfReference } )
-
-        if ( item.inherits && _checkSelfReference(item, item.inherits) ) // TODO - type casting shouldn't be needed
-            accept('error', `${item.$type} '${item.name}' cannot inherit from itself`, 
-            { node: item, property: 'refines' as Properties<T>, code: ReqSpecIssueCodes.SelfReference } )
-    
-        if ( item.conflicting && _checkSelfReference(item, item.conflicting) ) // TODO - type casting shouldn't be needed
-            accept('error', `${item.$type} '${item.name}' cannot inherit from itself`, 
-            { node: item, property: 'conflicting' as Properties<T>, code: ReqSpecIssueCodes.SelfReference } )
     }
+
+    checkDuplicateReference<T extends ReqGoalRefs>(item: T, accept: ValidationAcceptor): void {
         
+        arrayReferences.forEach(refType => {
+            if ( item[refType] && _countReferences(item[refType]!) === true ) {
+            
+                accept('error', 
+                    `'Redundant cross-reference in 'decomposes' attribute`,
+                    { node: item, property: 'decomposes' as Properties<T>, code: ReqSpecIssueCodes.SelfReference }
+                )
+            }
+        })
+    }   
 
 
 }
