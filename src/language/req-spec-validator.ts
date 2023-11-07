@@ -118,10 +118,10 @@ export class ReqSpecValidator {
         
         arrayReferences.forEach(refType => {
             if ( item[refType] && _countReferences(item[refType]!) === true ) {
-            
+                
                 accept('error', 
-                    `'Redundant cross-reference in 'decomposes' attribute`,
-                    { node: item, property: 'decomposes' as Properties<T>, code: ReqSpecIssueCodes.SelfReference }
+                    `'Redundant cross-reference in '${refType}' attribute`,
+                    { node: item, property: refType as Properties<T>, code: ReqSpecIssueCodes.SelfReference }
                 )
             }
         })
