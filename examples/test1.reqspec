@@ -1,0 +1,87 @@
+cat Rofl : "Derp"
+cat Lmao : "Herp"
+
+developer Kevin {
+    name "Kevin Roger"
+    role "Systems Engineer"
+}
+
+developer Chief {
+    name "Chief Yankee"
+    role "Software Engineer"
+}
+
+stakeholder AppsDev {
+    desc "Applications Development"
+    email "test@tester.com"
+    phone "(204)412-1293"
+}
+
+goal Goal0 : "Goal to be evolved"
+
+goal Goal1 : "Test Goal" {
+    cat Rofl
+}
+
+goal Goal2 : "Another goal" {
+    desc "The engine needs to produce 125 kW of net power"
+    cat Lmao
+    conflicts with Goal1
+    evolves Goal0
+    stakeholder AppsDev
+    rationale "Needs to produce sufficient power to be usable in heavy-duty trucking hybrids"
+}
+
+req Requirement0 : "This is a test req" {
+    desc "Lol"
+    id a2c5ab31-60b4-46b0-92fc-512c8001cd0b
+    see goal Goal1
+    cat Lmao, Rofl 
+}
+
+req Requirement1 : "This is another test requirement" {
+    cat Lmao
+    mitigates Fire
+}
+
+goal set GoalSet1 : "This is the first goal set" {
+    desc "Derp"
+    goal Derp : "Derp"
+    goal Herp : "Herp"
+    refs goals Goal0, Goal1
+}
+
+req set ReqSet1 : "This is the first req set" {
+    desc "woooo!"
+    req ReqBelongingToSet : "A req instantiated within a set!"
+    references req Requirement0
+    see goal Goal1
+    issues "No issues whatsoever"
+}
+
+goal doc SystemGoals : "System Goals Document" {
+    desc "These are the goals that the system should aspire to"
+    req UniqueRequirementWeForgot : "We can **~~define this inside the document~~** if we want" {
+        cat Lmao
+    }
+    references goal sets GoalSet1
+    ref goals Goal0
+}
+
+hazard Fire : "Generic fire with chance to spread"
+
+comp MyFirstComponent : "First component!" {
+    ref func BlowAir
+    ref hazard Fire
+}
+
+func BlowAir : "Generic function that can be referenced"
+
+goal TestGoal : "Yet another test" {
+    id f176d53e-e9f3-4de3-a99e-b95bad6ffb7d
+    cat Lmao
+    desc "Derp Derp Derp"
+    rationale "Herp"
+    stakeholder AppsDev
+    owned by Chief
+}

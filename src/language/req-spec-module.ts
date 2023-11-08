@@ -4,6 +4,7 @@ import {
 } from 'langium';
 import { ReqSpecGeneratedModule, ReqSpecGeneratedSharedModule } from './generated/module';
 import { ReqSpecValidator, registerValidationChecks } from './req-spec-validator';
+import { ReqSpecCompletionProvider, ReqSpecNodeHoverProvider, ReqSpecSymbolProvider } from './req-spec-symbolProvider';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -11,7 +12,7 @@ import { ReqSpecValidator, registerValidationChecks } from './req-spec-validator
 export type ReqSpecAddedServices = {
     validation: {
         ReqSpecValidator: ReqSpecValidator
-    }
+    },
 }
 
 /**
@@ -28,6 +29,11 @@ export type ReqSpecServices = LangiumServices & ReqSpecAddedServices
 export const ReqSpecModule: Module<ReqSpecServices, PartialLangiumServices & ReqSpecAddedServices> = {
     validation: {
         ReqSpecValidator: () => new ReqSpecValidator()
+    },
+    lsp: {
+        DocumentSymbolProvider: (services) => new ReqSpecSymbolProvider(services),
+        HoverProvider: (services) => new ReqSpecNodeHoverProvider(services),
+        CompletionProvider: (services) => new ReqSpecCompletionProvider(services),
     }
 };
 
