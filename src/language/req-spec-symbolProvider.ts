@@ -208,8 +208,6 @@ export class ReqSpecCompletionProvider extends DefaultCompletionProvider {
     
     protected override fillCompletionItem(document: TextDocument, offset: number, item: CompletionValueItem): CompletionItem | undefined {
         let label: string;
-        // console.log('node' in item)
-        // console.log(item)
 
         if (typeof item.label === 'string') {
             label = item.label;
@@ -223,8 +221,8 @@ export class ReqSpecCompletionProvider extends DefaultCompletionProvider {
         } else if ('nodeDescription' in item) {
             label = item.nodeDescription.name;
             let documentation: Hover
-            if ('node' in item.nodeDescription) {
-                documentation = getAstNodeSummary(item.nodeDescription.node!)
+            if ('node' in item.nodeDescription && item.nodeDescription.node !== undefined) {
+                documentation = getAstNodeSummary(item.nodeDescription.node)
                 item.documentation = documentation.contents as MarkupContent
             }
             
