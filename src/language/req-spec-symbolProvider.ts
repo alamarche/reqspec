@@ -1,4 +1,4 @@
-import {AstNode, AstNodeHoverProvider, CompletionValueItem, DefaultCompletionProvider, DefaultDocumentSymbolProvider, GenericAstNode, LangiumDocument, LangiumServices, MaybePromise, Reference, isReference} from 'langium'
+import {AstNode, AstNodeHoverProvider, AstNodeLocator, CompletionValueItem, DefaultCompletionProvider, DefaultDocumentSymbolProvider, GenericAstNode, LangiumDocument, LangiumDocuments, LangiumServices, MaybePromise, Reference, isReference} from 'langium'
 import { Hover, MarkupContent, SymbolKind } from 'vscode-languageserver-types'
 import { CompletionList, CompletionItem, CompletionParams, CompletionItemKind, InsertTextFormat } from 'vscode-languageserver'
 import { v4 } from 'uuid'
@@ -117,8 +117,17 @@ type Suggestions = Promise<CompletionList | undefined>
  */
 export class ReqSpecCompletionProvider extends DefaultCompletionProvider {
     
+    // protected readonly references: References
+    // protected readonly linker: Linker
+    protected readonly langiumDocuments: () => LangiumDocuments
+    protected readonly locator: AstNodeLocator
+
     constructor(services: LangiumServices) {
         super(services)
+        // this.linker = services.
+        this.langiumDocuments = () => services.shared.workspace.LangiumDocuments
+        this.locator = services.workspace.AstNodeLocator
+        // this.references = services.references.References
     }
 
     override async getCompletion(doc: LangiumDocument, params: CompletionParams): Suggestions {
@@ -224,6 +233,13 @@ export class ReqSpecCompletionProvider extends DefaultCompletionProvider {
             if ('node' in item.nodeDescription && item.nodeDescription.node !== undefined) {
                 documentation = getAstNodeSummary(item.nodeDescription.node)
                 item.documentation = documentation.contents as MarkupContent
+            } else {
+                const doc = this.langiumDocuments().getOrCreateDocument(item.nodeDescription.documentUri)
+                let node = this.locator.getAstNode(doc.parseResult.value, item.nodeDescription.path)
+
+                if (node !== undefined) {
+                    item.documentation = (getAstNodeSummary(node).contents) as MarkupContent
+                }
             }
             
         } else {
