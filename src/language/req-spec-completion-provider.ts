@@ -34,7 +34,7 @@ export class ReqSpecCompletionProvider extends DefaultCompletionProvider {
         const list = await super.getCompletion(doc, params);
 
         // Append my custom items
-        if (list !== undefined) list.items.push(...snippets);
+        if (list !== undefined) list.items.push(...snippets as CompletionItem[]);
         
         return list;
     }
