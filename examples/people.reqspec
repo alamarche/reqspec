@@ -1,0 +1,31 @@
+developer SoftwareDeveloper {
+    id 3e8ff79d-35a5-4572-9aea-f1d710b3f6c1
+    name "Dev McDeverson"
+    title "Chief Developer"
+    role "Technical Project Lead"
+    email "dev@deverson.com"
+}
+
+stakeholder MainCustomer {
+    id 82427bd9-7a6a-46a6-990d-104a6ba9b18a
+    name "Custer McCustomerson"
+    title "Project customer"
+    role "Drives customer needs"
+    email "iama@customer.com"
+}
+
+developer Kevin {
+    name "Kevin Roger"
+    role "Systems Engineer"
+}
+
+developer Chief {
+    name "Chief Yankee"
+    role "Software Engineer"
+}
+
+stakeholder AppsDev {
+    desc "Applications Development"
+    email "test@tester.com"
+    phone "(204)412-1293"
+}
