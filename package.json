@@ -69,6 +69,108 @@
         "Programming Languages"
     ],
     "contributes": {
+        "configuration": {
+            "title": "ReqSpec",
+            "properties": {
+                "reqspec.polarion.syncMode": {
+                    "type": "string",
+                    "enum": ["REST API", "SOAP API", "SVN", "DISABLED"],
+                    "order": 0,
+                    "enumDescriptions": [
+                        "Sync/Write/Read commands act via Polarion REST interface",
+                        "Sync/Write/Read commands act via Polarion SOAP interface",
+                        "Sync/Write/Read commands act on checked out SVN file directory",
+                        "Default - no Polarion project"
+                    ],
+                    "default": "DISABLED",
+                    "description": "Desired way to send/receive information to the Polarion project"
+                },
+                "reqspec.polarion.projectDirectory": {
+                    "type": "string",
+                    "order": 1,
+                    "default": "null",
+                    "description": "Absolute path to associated Polarion project directory"
+                },
+                "reqspec.polarion.projectId": {
+                    "type": "string",
+                    "default": "null",
+                    "order": 2,
+                    "description": "Polarion project ID - used in REST/SOAP queries"
+                },
+                "reqspec.polarion.restEndpoint": {
+                    "type": "string",
+                    "default": "null",
+                    "order": 3,
+                    "description": "Base URL to Polarion for REST queries"
+                },
+                "reqspec.polarion.soapEndpoint": {
+                    "type": "string",
+                    "default": "null",
+                    "order": 4,
+                    "description": "Base URL to Polarion for SOAP queries",
+                    "editPresentation": "singlelineText"
+                },
+                "reqspec.reqif.typeMapping": {
+                    "type": "string",
+                    "default": "null",
+                    "order": 5,
+                    "description": "Absolute path to a ReqIF type mapping file for use in ReqSpec round-trips"
+                },
+                "reqspec.reqif.typeLinkMapping": {
+                    "type": "string",
+                    "default": "null",
+                    "order": 6,
+                    "description": "Absolute path to a ReqIF type-link mapping file for use in ReqSpec round-trips"
+                },
+                "reqspec.userconfig.snippets": {
+                    "type": "object",
+                    "description": "User-defined autocomplete snippets and their associated scopes for use in ReqSpec",
+                    "order": 7,
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "scope": {
+                                "type": "string",
+                                "enum": [
+                                    "AstNode", 
+                                    "Requirement", "RequirementDocument", "RequirementSet", 
+                                    "Goal", "GoalDocument", "GoalSet", 
+                                    "Component", "Hazard"
+                                ]
+                            },
+                            "snippets": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "uniqueItems": true,
+                                    "properties": {
+                                        "name": {"type": "string"},
+                                        "content": {"type": "string"},
+                                        "documentation": {"type": "string"}
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                },
+                "reqspec.grammar.additionalProperties": {
+                    "$comment": "TODO - Need to complete",
+                    "type": "array",
+                    "order": 8,
+                    "default": "null",
+                    "description": ""
+                },
+                "reqspec.grammar.additionalTypes": {
+                    "$comment": "TODO - Need to complete",
+                    "type": "array",
+                    "order": 9,
+                    "default": "null",
+                    "description": ""
+                }
+            }
+        },
         "commands": [
             {
                 "command": "reqspec.toSphinxNeeds",
