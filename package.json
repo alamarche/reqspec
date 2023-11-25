@@ -166,14 +166,14 @@
                     "$comment": "TODO - Need to complete",
                     "type": "array",
                     "order": 9,
-                    "default": "null",
+                    "default": ["null"],
                     "description": ""
                 }
             }
         },
         "commands": [
             {
-                "command": "reqspec.toSphinxNeeds",
+                "command": "reqspec.export.sphinxNeeds.fileToExhaustive",
                 "title": "Exports ReqSpec Goals/Requirements to Sphinx-Needs format",
                 "shortTitle": "To Sphinx-Needs"
             }
