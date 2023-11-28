@@ -26,6 +26,15 @@ goal set GoalSet1 : "This is the first goal set" {
     refs goals Goal0, Goal1
 }
 
+goal Derp : "Derpcity" {
+    id 159a00f8-0607-463c-84e6-dadb8e925cd2
+    cat Regulatory
+    desc "description"
+    rationale "rationale"
+    see goal Goal2
+    stakeholder AppsDev
+}
+
 
 
 goal doc SystemGoals : "System Goals Document" {

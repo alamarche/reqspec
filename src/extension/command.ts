@@ -22,12 +22,17 @@ const commandMap = new Map<string, Function>([
     ['reqspec.sync.polarion.documentToDocument', () => {}],
     ['reqspec.sync.polarion.itemToItem', () => {}],
     ['reqspec.sync.polarion.projectToProject', () => {}],
+    ['reqspec.format.formatDocument', () => {}],
+    ['reqspec.format.formatBlock', () => {}],
+    ['reqspec.format.formatLine', () => {}],
 ])
 
-// const quickFixes = new Map<string, Function>([
-//     ['reqspec.quickfix.capitalizeNode', () => {}],
-//     ['reqspec.quickfix.moveBlockToFile', () => {}],
-// ])
+const quickFixMap = new Map<string, Function>([
+    ['reqspec.quickfix.capitalizeNode', () => {}],
+    ['reqspec.quickfix.moveBlockToFile', () => {}],
+])
+
+const fullCommandMap = new Map([...commandMap, ...quickFixMap])
 
 const sphinxNeedsCmdInput = async (): Promise<
     [string | undefined, 
@@ -94,7 +99,7 @@ export async function sphinxCmdHandler() {
 
 export function registerCommands(context: vscode.ExtensionContext): void {
     
-    commandMap.forEach((func, cmdID) => {
+    fullCommandMap.forEach((func, cmdID) => {
         context.subscriptions.push(vscode.commands.registerCommand(cmdID, func as any))
     })
 }
