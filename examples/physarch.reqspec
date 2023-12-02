@@ -1,0 +1,8 @@
+hazard Fire : "Generic fire with chance to spread"
+
+comp MyFirstComponent : "First component!" {
+    ref func BlowAir
+    ref hazard Fire
+}
+
+func BlowAir : "Generic function that can be referenced"

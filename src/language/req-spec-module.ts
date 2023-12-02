@@ -4,7 +4,10 @@ import {
 } from 'langium';
 import { ReqSpecGeneratedModule, ReqSpecGeneratedSharedModule } from './generated/module';
 import { ReqSpecValidator, registerValidationChecks } from './req-spec-validator';
-import { ReqSpecCompletionProvider, ReqSpecNodeHoverProvider, ReqSpecSymbolProvider } from './req-spec-symbolProvider';
+import { ReqSpecSymbolProvider } from './req-spec-symbolProvider';
+import { ReqSpecNodeHoverProvider } from './req-spec-hover-provider';
+import { ReqSpecCompletionProvider } from './req-spec-completion-provider';
+import { ReqSpecScopeComputation } from './req-spec-scope-computation';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -34,6 +37,9 @@ export const ReqSpecModule: Module<ReqSpecServices, PartialLangiumServices & Req
         DocumentSymbolProvider: (services) => new ReqSpecSymbolProvider(services),
         HoverProvider: (services) => new ReqSpecNodeHoverProvider(services),
         CompletionProvider: (services) => new ReqSpecCompletionProvider(services),
+    },
+    references: {
+        ScopeComputation: (services) => new ReqSpecScopeComputation(services),
     }
 };
 

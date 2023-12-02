@@ -2,7 +2,38 @@ import * as vscode from "vscode"
 import { GenerateOptions, generateAction } from "../cli/main"
 import { NeedsObject } from "../cli/generator"
 
-const sphinxNeedsCmd = 'reqspec.toSphinxNeeds'
+// Consider adding commands for syncng project to project.
+const commandMap = new Map<string, Function>([
+    ['reqspec.export.sphinxNeeds.fileToExhaustive', sphinxCmdHandler],
+    ['reqspec.export.sphinxNeeds.fileToMenu', () => {}],
+    ['reqspec.export.sphinxNeeds.workspaceToExhaustive', () => {}],
+    ['reqspec.export.sphinxNeeds.workspaceToMenu', () => {}],
+    ['reqspec.import.sphinxNeeds.importFileExhaustive', () => {}],
+    ['reqspec.import.sphinxNeeds.importFileMenu', () => {}],
+    ['reqspec.import.sphinxNeeds.importDirectoryExhaustive', () => {}],
+    ['reqspec.import.sphinxNeeds.importDirectoryMenu', () => {}],
+    ['reqspec.sync.sphinxNeeds.documentToDocument', () => {}],
+    ['reqspec.sync.sphinxNeeds.itemToItem', () => {}],
+    ['reqspec.sync.sphinxNeeds.projectToProject', () => {}],
+    ['reqspec.export.polarion.fileToWorkItems', () => {}],
+    ['reqspec.export.polarion.fileToDocument', () => {}],
+    ['reqspec.import.polarion.workItemsToFile', () => {}],
+    ['reqspec.import.polarion.documentToFile', () => {}],
+    ['reqspec.sync.polarion.documentToDocument', () => {}],
+    ['reqspec.sync.polarion.itemToItem', () => {}],
+    ['reqspec.sync.polarion.projectToProject', () => {}],
+    ['reqspec.format.formatDocument', () => {}],
+    ['reqspec.format.formatBlock', () => {}],
+    ['reqspec.format.formatLine', () => {}],
+])
+
+const quickFixMap = new Map<string, Function>([
+    ['reqspec.quickfix.capitalizeNode', () => {}],
+    ['reqspec.quickfix.moveBlockToFile', () => {}],
+])
+
+const fullCommandMap = new Map([...commandMap, ...quickFixMap])
+
 const sphinxNeedsCmdInput = async (): Promise<
     [string | undefined, 
     string | undefined, 
@@ -67,5 +98,8 @@ export async function sphinxCmdHandler() {
 }
 
 export function registerCommands(context: vscode.ExtensionContext): void {
-    context.subscriptions.push(vscode.commands.registerCommand(sphinxNeedsCmd, sphinxCmdHandler))
+    
+    fullCommandMap.forEach((func, cmdID) => {
+        context.subscriptions.push(vscode.commands.registerCommand(cmdID, func as any))
+    })
 }
