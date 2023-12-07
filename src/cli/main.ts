@@ -6,7 +6,7 @@ import { createReqSpecServices } from '../language/req-spec-module';
 import { extractAstNode } from './cli-util';
 // import { generateJavaScript } from './generator';
 import { NodeFileSystem } from 'langium/node';
-import { generateSphinxNeedsObjects, NeedsObject } from './generator';
+import { generateSphinxNeedsObjects, NeedsObject } from './sphinx-needs-generator';
 
 export const generateAction = async (fileName: string, type: NeedsObject, opts: GenerateOptions): Promise<void> => {
     const services = createReqSpecServices(NodeFileSystem).ReqSpec;
