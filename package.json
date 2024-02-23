@@ -131,48 +131,6 @@
                     "order": 6,
                     "description": "Absolute path to a ReqIF type-link mapping file for use in ReqSpec round-trips"
                 },
-                "reqspec.userconfig.snippets": {
-                    "type": "object",
-                    "description": "User-defined autocomplete snippets and their associated scopes for use in ReqSpec",
-                    "order": 7,
-                    "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                            "scope": {
-                                "type": "string",
-                                "enum": [
-                                    "AstNode",
-                                    "Requirement",
-                                    "RequirementDocument",
-                                    "RequirementSet",
-                                    "Goal",
-                                    "GoalDocument",
-                                    "GoalSet",
-                                    "Component",
-                                    "Hazard"
-                                ]
-                            },
-                            "snippets": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "uniqueItems": true,
-                                    "properties": {
-                                        "name": {
-                                            "type": "string"
-                                        },
-                                        "content": {
-                                            "type": "string"
-                                        },
-                                        "documentation": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
                 "reqspec.grammar.additionalProperties": {
                     "$comment": "TODO - Need to complete",
                     "type": "array",
